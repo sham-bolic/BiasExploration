@@ -205,3 +205,14 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# macOS
+.DS_Store
+
+# Personal / unrelated to this project
+pa2.pdf
+nabil-style.md
+
+# Personal Claude skill configs bundled inside reference dirs
+final project/.claude/
+
