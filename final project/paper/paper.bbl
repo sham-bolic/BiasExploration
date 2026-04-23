@@ -1,0 +1,52 @@
+\begin{thebibliography}{5}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Barbieri et~al.(2022)Barbieri, Espinosa~Anke, and
+  Camacho-Collados}]{barbieri-etal-2022-xlm}
+Francesco Barbieri, Luis Espinosa~Anke, and Jose Camacho-Collados. 2022.
+\newblock \href {https://aclanthology.org/2022.lrec-1.27/} {{XLM}-{T}:
+  Multilingual language models in {T}witter for sentiment analysis and beyond}.
+\newblock In \emph{Proceedings of the Thirteenth Language Resources and
+  Evaluation Conference}, pages 258--266, Marseille, France. European Language
+  Resources Association.
+
+\bibitem[{C{\^a}mara et~al.(2022)C{\^a}mara, Taneja, Azad, Allaway, and
+  Zemel}]{camara-etal-2022-mapping}
+Ant{\'o}nio C{\^a}mara, Nina Taneja, Tamjeed Azad, Emily Allaway, and Richard
+  Zemel. 2022.
+\newblock \href {https://doi.org/10.18653/v1/2022.ltedi-1.11} {Mapping the
+  multilingual margins: Intersectional biases of sentiment analysis systems in
+  {E}nglish, {S}panish, and {A}rabic}.
+\newblock In \emph{Proceedings of the Second Workshop on Language Technology
+  for Equality, Diversity and Inclusion}, pages 90--106, Dublin, Ireland.
+  Association for Computational Linguistics.
+
+\bibitem[{Faisal and
+  Anastasopoulos(2023)}]{faisal-anastasopoulos-2023-geographic}
+Fahim Faisal and Antonios Anastasopoulos. 2023.
+\newblock \href {https://doi.org/10.18653/v1/2023.mrl-1.12} {Geographic and
+  geopolitical biases of language models}.
+\newblock In \emph{Proceedings of the 3rd Workshop on Multi-lingual
+  Representation Learning (MRL)}, pages 139--163, Singapore. Association for
+  Computational Linguistics.
+
+\bibitem[{Goldfarb-Tarrant et~al.(2023)Goldfarb-Tarrant, Ross, and
+  Lopez}]{goldfarb-tarrant-etal-2023-cross}
+Seraphina Goldfarb-Tarrant, Bj{\"o}rn Ross, and Adam Lopez. 2023.
+\newblock \href {https://doi.org/10.18653/v1/2023.emnlp-main.346}
+  {Cross-lingual transfer can worsen bias in sentiment analysis}.
+\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in
+  Natural Language Processing}, pages 5691--5704, Singapore. Association for
+  Computational Linguistics.
+
+\bibitem[{Li et~al.(2024)Li, Haider, and Callison-Burch}]{li-etal-2024-land}
+Bryan Li, Samar Haider, and Chris Callison-Burch. 2024.
+\newblock \href {https://doi.org/10.18653/v1/2024.naacl-long.213} {This land is
+  {Your, My} land: Evaluating geopolitical bias in language models through
+  territorial disputes}.
+\newblock In \emph{Proceedings of the 2024 Conference of the North American
+  Chapter of the Association for Computational Linguistics: Human Language
+  Technologies (Volume 1: Long Papers)}, pages 3855--3871, Mexico City, Mexico.
+  Association for Computational Linguistics.
+
+\end{thebibliography}
