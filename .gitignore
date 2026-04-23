@@ -215,4 +215,25 @@ nabil-style.md
 
 # Personal Claude skill configs bundled inside reference dirs
 final project/.claude/
+.claude/
+
+# Course materials (not part of the project)
+lectures/
+COMP 550 Course Outline Winter 2026.pdf
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+missfont.log
+
+# Duplicate of root paper.pdf
+final project/paper/paper.pdf
+
+# Temporary text dumps
+paper.txt
 
