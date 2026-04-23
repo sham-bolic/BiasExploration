@@ -374,12 +374,6 @@ The same AI-avoidance rules from 1-page summaries apply, but longer papers have 
 
 ---
 
-## 7. AI use policy
-
-The assignment requires compliance with the course policy on acceptable use of AI. Before submission, confirm with all three members whether any AI tools were used in writing or implementation, and add a disclosure statement if required by the course policy. Check the course syllabus or myCourses for the exact requirement.
-
----
-
 ## 8. Execution plan (5 days: April 18–23)
 
 ### Phase 1 — Setup + run experiments (April 18, blocking everything else)
@@ -416,7 +410,6 @@ The assignment requires compliance with the course policy on acceptable use of A
 - [ ] Run pre-submission checklist (Section 11 of this guide) item by item
 - [ ] Format check: ACL style file with ruler, 4.5–5 pages, all figures captioned, references complete
 - [ ] Code (`main.ipynb`): clear outputs, re-run from clean kernel top-to-bottom, add a markdown cell at top explaining how to run. Verify it completes without errors.
-- [ ] Confirm AI use policy compliance and add disclosure if required (see Section 7)
 - [ ] Submit PDF + code on myCourses before April 23
 
 ---
@@ -473,7 +466,6 @@ Three states: **Drafted** = fully written into the guide and ready to use as-is.
 | Notebook hygiene (cells, seeds, paths, outputs) | Verified (2026-04-22) | Audited by subagent against §16 scaffold: all 17 cells in order, seeds set, `model.config.id2label` used, batched softmax (no pipeline), all CSVs + figure PDFs/PNGs produced, no hardcoded paths or debug output |
 | Paper numbers cross-checked against data | Verified (2026-04-22) | Audited by subagent: only rounding deltas <0.005; substantive values all match `data/*.csv` and notebook cell outputs |
 | Template neutrality self-rating | Removed (2026-04-22) | Dropped from paper and from §17; nonsense-country baseline is the primary defence against template-driven artefacts |
-| AI use policy disclosure | Open | Team writing after internal discussion; section to be inserted before `\bibliography{custom}` in `paper.tex` |
 | BibTeX final verification against ACL Anthology | Open | 5 core entries (Barbieri, Faisal, Li, Câmara, Goldfarb-Tarrant) copied verbatim from §13 (verified 2026-04-19). 4 toolkit entries in `paper/custom.bib` (Wolf, Seabold, Hunter, Waskom) still need a DOI/ACL-Anthology sanity check |
 | Overleaf submission bundle | Drafted (2026-04-22) | `final project/paper.zip` contains `paper.tex`, `custom.bib`, `acl.sty`, `acl_natbib.bst`, `figures/fig1_heatmap.pdf`, `figures/fig2_interaction.pdf`. Compile on Overleaf with pdfLaTeX |
 | Page-count check on compiled PDF | Open | Target 4.5–5 pages content (refs excluded, appendices + figures included). Measure on Overleaf first; appendix Table 2 (per-country Gap) can be dropped to save ~0.4 page if over |
