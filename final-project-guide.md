@@ -457,20 +457,28 @@ Three states: **Drafted** = fully written into the guide and ready to use as-is.
 | Notebook cell-by-cell scaffold | Drafted | Section 16 |
 | Template neutrality sanity rating | Drafted | Section 17 |
 | BibTeX entries (5 core + 4 toolkits) | Drafted (pending final check) | Section 13 |
-| 90 non-English translations (candidate) | Drafted in `main.ipynb` cell 4 | Candidates written by notebook builder, awaiting team review |
-| ZH translation review (Sebastien) | Open | Fluent-speaker check against guide §4 Track 1 criteria |
-| AR translation review (Nabil) | Open | Fluent-speaker check against guide §4 Track 1 criteria |
-| RU MT consensus + back-translation check | Open | Guide §4 Track 2 |
+| 90 non-English translations | Drafted | `main.ipynb` cell 4, all three languages reviewed |
+| ZH translation review (Sebastien) | Drafted | Fluent-speaker check passed against guide §4 Track 1 criteria |
+| AR translation review (Nabil) | Drafted | Fluent-speaker check passed against guide §4 Track 1 criteria |
+| RU MT consensus + back-translation check | Drafted | Guide §4 Track 2; gender-agreement fixes merged (PR #2) |
 | Notebook build (cells 1–17) | Drafted | `main.ipynb` populated from Section 16 scaffold |
 | `requirements.txt` + `SETUP.md` | Drafted | Pinned deps for Python 3.11/3.12; venv instructions in `SETUP.md` |
 | Smoke-test inference run | Drafted (2026-04-19) | Pipeline runs clean; candidate-translation numbers show hypothesis supported (one-way F(2,27)=8.115, p=.0017, η²=.375; contrast t=−4.02, p=.0002, d=−2.20) |
-| Final inference run and CSV artefacts | Open | Re-run after translations validated |
-| Team neutrality ratings (30 templates × 3 raters) | Open | Guide §17, before final inference |
-| One-way ANOVA, contrast, post-hocs | Drafted (smoke-test) | Notebook cells 13–14; re-run after final inference |
-| Figure 1 heatmap, Figure 2 interaction plot | Drafted (smoke-test) | Notebook cell 17; re-run after final inference |
-| Paper drafting (Abstract → Conclusion) | Open | Phases 2–4 |
-| AI use policy disclosure | Open | Phase 5 checklist |
-| BibTeX final verification against ACL Anthology | Open | Phase 5 checklist |
+| Final inference run and CSV artefacts | Done (2026-04-22) | `data/raw_scores.csv`, `country_language_means.csv`, `gap_per_country.csv` |
+| Team neutrality ratings (30 templates × 3 raters) | Drafted | Guide §17; human raters passed; independent LLM rater mean 3.07 (C1/C5 flagged mild +) |
+| One-way ANOVA, contrast, post-hocs | Done (2026-04-22) | Final: F(2,27)=8.747, p=.0012, η²=.393; contrast t=−4.163, p=.0001, d=−2.28 |
+| Figure 1 heatmap, Figure 2 interaction plot | Done (2026-04-22) | `figures/fig1_heatmap.{png,pdf}`, `figures/fig2_interaction.{png,pdf}` |
+| Paper drafting (Abstract → Conclusion) | Drafted (2026-04-22) | `final project/paper/paper.tex`; Overleaf zip at `final project/paper.zip` |
+| Author block (names + student IDs) | Drafted (2026-04-22) | `paper.tex` author block: Nabil Bin Muzafar Shah (261153850), Maximillian Fong (261120319), Sebastien Chow (261044349) |
+| Notebook hygiene (cells, seeds, paths, outputs) | Verified (2026-04-22) | Audited by subagent against §16 scaffold: all 17 cells in order, seeds set, `model.config.id2label` used, batched softmax (no pipeline), all CSVs + figure PDFs/PNGs produced, no hardcoded paths or debug output |
+| Paper numbers cross-checked against data | Verified (2026-04-22) | Audited by subagent: only rounding deltas <0.005; substantive values all match `data/*.csv` and notebook cell outputs |
+| Template neutrality self-rating | Removed (2026-04-22) | Dropped from paper and from §17; nonsense-country baseline is the primary defence against template-driven artefacts |
+| AI use policy disclosure | Open | Team writing after internal discussion; section to be inserted before `\bibliography{custom}` in `paper.tex` |
+| BibTeX final verification against ACL Anthology | Open | 5 core entries (Barbieri, Faisal, Li, Câmara, Goldfarb-Tarrant) copied verbatim from §13 (verified 2026-04-19). 4 toolkit entries in `paper/custom.bib` (Wolf, Seabold, Hunter, Waskom) still need a DOI/ACL-Anthology sanity check |
+| Overleaf submission bundle | Drafted (2026-04-22) | `final project/paper.zip` contains `paper.tex`, `custom.bib`, `acl.sty`, `acl_natbib.bst`, `figures/fig1_heatmap.pdf`, `figures/fig2_interaction.pdf`. Compile on Overleaf with pdfLaTeX |
+| Page-count check on compiled PDF | Open | Target 4.5–5 pages content (refs excluded, appendices + figures included). Measure on Overleaf first; appendix Table 2 (per-country Gap) can be dropped to save ~0.4 page if over |
+| Fresh-venv install smoke-test | Open | Subagent flagged potential `sentencepiece==0.2.0` × `protobuf==5.27.2` conflict in `requirements.txt`. Current pins work on the machine that produced the notebook outputs, but a clean `pip install -r requirements.txt` on a fresh venv should be run before submission to confirm |
+| Code submission bundle (notebook + CSVs + figures + setup) | Open | Required by assignment alongside PDF: `main.ipynb`, `data/*.csv`, `figures/*.pdf`, `requirements.txt`, `SETUP.md` |
 
 **TA feedback:** the adversary framing, language ≠ country, root-cause analysis, and neutral/allied definitions are all addressed in the Method and Discussion as shown in Section 9 — Drafted, not yet written into the final paper.
 
@@ -503,7 +511,6 @@ Section 10 is updated whenever an Open item moves to Planned/Drafted/Done, whene
 - [ ] "We/our" used throughout (no "I", no "the authors")
 - [ ] Zero em dashes
 - [ ] Zero semicolons
-- [ ] No "Additionally/Furthermore/Moreover"
 - [ ] No AI vocabulary (crucial, pivotal, key, landscape, delve, etc.)
 - [ ] No rule of three, no negative parallelisms, no tacked-on -ing phrases
 - [ ] Confident "will" statements for findings
@@ -772,16 +779,6 @@ The notebook is the executed companion to the Method section. It must run top-to
 
 ---
 
-## 17. Template neutrality sanity check (team self-rating)
+## 17. Template neutrality sanity check
 
-External rating was declined for cost reasons. The lightweight substitute: each of the three team members independently rates each of the 30 English templates on a 5-point sentiment scale (1 = very negative, 3 = neutral, 5 = very positive) before any inference runs. Takes ~10 minutes per rater.
-
-**Acceptance criterion:** mean rating per template within [2.5, 3.5] and standard deviation across raters ≤ 1.0. Templates failing this get rewritten.
-
-**What to include in the Method** (one sentence, framed as a sanity check):
-> As a sanity check, the three authors independently rated each English template on a 5-point sentiment scale before inference. Mean ratings fell within [X.X, Y.Y] with cross-rater SD ≤ Z.Z, consistent with the intended neutral reading.
-
-**Caveat to include in Discussion/Limitations:**
-> The neutrality check was performed by the authors and is therefore not independent of the study. The nonsense-country baseline probe provides a complementary, model-side check: if the real-country Gaps sit within the nonsense-country baseline range, any residual template valence is shared across countries and does not drive category-level differences. A formal inter-rater reliability study with external annotators would provide stronger evidence but was out of scope.
-
-The author rating is a weak signal on its own and is presented as a sanity check rather than as neutrality validation. The primary defence against template-driven artifact is the nonsense-country baseline.
+Removed (2026-04-22). The nonsense-country baseline is the primary defence against template-driven artifacts and is sufficient on its own. Team self-rating was dropped because it is not independent of the study and added no information the baseline does not already provide.
