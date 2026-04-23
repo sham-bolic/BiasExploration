@@ -8,6 +8,7 @@ Tests whether **XLM-RoBERTa-Twitter** (`cardiffnlp/twitter-xlm-roberta-base-sent
 main.ipynb              Full pipeline: inference → Gap → stats → figures
 data/                   Generated CSVs
 figures/                fig1_heatmap.pdf, fig2_interaction.pdf
+final project/paper.pdf Compiled paper
 final project/paper/    LaTeX source (paper.tex, custom.bib, acl.sty)
 final-project-guide.md  Methodology / writing guide
 requirements.txt
