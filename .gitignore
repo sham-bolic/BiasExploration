@@ -237,3 +237,8 @@ final project/paper/paper.pdf
 # Temporary text dumps
 paper.txt
 
+
+# Working / prompt files (not for submission)
+final project/paper.txt
+final project/paper-humanized.txt
+final project/review-prompt.md
