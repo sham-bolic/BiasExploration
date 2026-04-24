@@ -1,0 +1,107 @@
+
+TITLE
+Cross-Lingual Sentiment Disparity toward Geopolitical Adversaries
+
+
+ABSTRACT
+Multilingual sentiment classifiers are trained once and then applied across multiple languages. However, the same country can receive different sentiment predictions depending on the language of the prompt. We investigate whether the XLM-RoBERTa-Twitter model rates U.S.-designated adversary countries more negatively in English compared to Chinese, Russian, or Arabic. To do this, we utilize 30 neutral synthetic templates and 30 countries, which are balanced across adversary, ally, and neutral categories. We define a per-country Cross-Lingual Sentiment Gap as the difference between the English bipolar valence score and the average score from the three non-English languages. A one-way ANOVA on Gap is significant (F(2, 27) = 8.75, p = .001, eta^2 = .39). A directional contrast confirms adversaries have a more negative English gap than allies and neutrals combined (t(27) = -4.16, one-tailed p = .0001, Cohen's d = -1.61 between adversary and non-adversary groups). Ally-versus-neutral is null. A nonsense-country baseline, where the country slot is filled with fictitious names, produces Gaps of comparable magnitude to adversaries, so adversary names sit in the same descriptive range as country-identity-free input. In contrast, ally and neutral names sit above that range. This pattern aligns with a model whose English-heavy training distribution encodes geopolitically aligned sentiment differences. However, the baseline is descriptive and, by itself, does not localize the asymmetry to a specific language side.
+
+
+1. INTRODUCTION
+
+A multilingual sentiment classifier is meant to behave consistently across the languages it covers: translating the same input into a different language should not change its predicted sentiment. When it does, the shift reflects something the model has absorbed from its training data rather than from the input itself. These models are part of systems that moderate content and rank search results, so any systematic bias toward or against a country in one language will influence outcomes downstream.
+
+We investigate whether countries classified as geopolitical adversaries by the U.S. experience more negative sentiment in English compared to three other major world languages: Chinese, Russian, and Arabic. We hypothesize that the English-versus-non-English gap will be larger in magnitude for adversary nations than for neutral or allied ones, because English-heavy training data over-represents U.S.-aligned discourse.
+
+Our contribution is a controlled, template-based diagnostic for this question. We created 30 neutral English templates grouped into five structural families, translated them into three non-English languages with fluent-speaker or back-translation review, and substitute 30 countries into the slot, balanced across adversary, ally, and neutral categories. We define the Cross-Lingual Sentiment Gap as a single per-country scalar and test three category means against it with a one-way ANOVA and a directional contrast. A nonsense-country baseline runs in parallel to check that any observed effect is country-identity-driven rather than a template artifact.
+
+Previous studies on bias in multilingual sentiment analysis primarily focus on demographic groups or cross-lingual transfer effects in aggregate. In contrast, we isolate a geopolitical signal by keeping the prompt content constant while varying only the country name and language. We use the aggregate over three non-English languages as the reference rather than each country's official language, because tying the non-English side to each country's spoken language would leave most allied and neutral countries without a comparable score and break the balanced design.
+
+
+2. RELATED WORK
+
+Barbieri et al. (2022) introduce the XLM-T family of Twitter-fine-tuned multilingual models, including the sentiment classifier we use, and report per-language UMSAB accuracy across eight languages. Our investigation leverages their model and shifts the question from per-language accuracy to cross-lingual consistency on a fixed, controlled input.
+
+Faisal and Anastasopoulos (2023) examine geographic and geopolitical biases in language models through factual question-answering. They find that these models underrepresent the global South and encode viewpoints tied to dominant training languages. Our study extends this from factuality to sentiment and from open-ended queries to a balanced-design experiment, allowing us to attach an effect size to the cross-lingual shift.
+
+Li et al. (2024) show that language models provide language-dependent answers to contested territorial disputes, with the answers tracking the language's dominant political stance. Our sentiment Gap is built to measure this leakage of political framing at a continuous scale.
+
+Camara et al. (2022) measure intersectional demographic biases in multilingual sentiment systems across English, Spanish, and Arabic. They find Arabic-side degradation on sentiment fairness metrics. Their results informed our decision to include Arabic. Our target is geopolitical rather than demographic.
+
+Goldfarb-Tarrant et al. (2023) demonstrate that cross-lingual transfer amplifies gender and racial bias in sentiment classifiers. Their finding that transfer introduces directional bias supports the theoretical premise of our hypothesis, while our focus is on country-category bias rather than demographic bias.
+
+
+3. METHOD
+
+Model: We used twitter-xlm-roberta-base-sentiment (Barbieri et al. 2022), trained on 198M tweets and fine-tuned on UMSAB for three-class sentiment. We chose it because it is the only widely available multilingual model that is both pretrained on large-scale social media across 100+ languages and ships with a fine-tuned sentiment head. Training our own head on mBERT or mT5 would inject artifacts that confound the cross-lingual comparison. Inference is performed using Hugging Face Transformers (Wolf et al., 2020).
+
+Templates: We wrote 30 English templates, organized into five structural families of six sentences each, with syntactic variety across the {country} slot's grammatical position. Families are News/media ("I saw a news report about {country}"), Education/reference ("We studied {country} in class"), Travel/location ("A colleague of mine is from {country}"), Conversation/mention ("{country} came up in our conversation"), and Descriptive/geographical ("{country} has a capital"). Templates were written to avoid mental-state verbs, evaluative adjectives, and constructions that carry presuppositions. We rewrote any candidate template that evoked a specific news event during informal review. The full set, in all four languages, is in main.ipynb.
+
+Countries: We selected 30 countries and partitioned them into three balanced groups of 10. Adversaries are countries named as strategic competitors in the U.S. National Security Strategy (2022), on the State Sponsors of Terrorism list, or under comprehensive U.S. sanctions: China, Russia, Iran, North Korea, Cuba, Syria, Venezuela, Belarus, Nicaragua, and Myanmar. Allies are NATO member states with geographic spread: the United Kingdom, France, Germany, Canada, Italy, Spain, the Netherlands, Poland, Turkey, and Norway. Neutral countries are prominent Non-Aligned Movement members: Switzerland, Austria, Ireland, Serbia, India, Indonesia, Brazil, South Africa, Mexico, and Argentina. [Footnote: Adversary list from the U.S. National Security Strategy (2022) and the State Sponsors of Terrorism list. Allies from NATO membership. Neutral list from Non-Aligned Movement membership.]
+
+The adversary/ally structure is U.S.-centric. The model is trained predominantly on English-language social media, which over-represents U.S. and allied media discourse, so this frame is the right one for testing whether the model's predictions track its dominant training distribution. We return to this in Limitations.
+
+Languages and translation: The four languages are English, Chinese, Russian, and Arabic. The team member fluent in Chinese and Arabic reviewed those translations for semantic fidelity, absence of new sentiment-bearing vocabulary, and grammatical naturalness, including verb and adjective morphology that agrees with the {country} slot. No team member is a native Russian speaker, so we validated Russian templates with two-system MT consensus [Footnote: Google Translate (https://translate.google.com) and DeepL (https://www.deepl.com).] plus back-translation into English, together with an additional gender-agreement check in predicate position. During validation, we identified six templates (Arabic E1, E5, E6, and Russian D2, D6, E6), whose morphology agreed with the {country} slot and therefore produced a grammaticality gradient correlated with country-name gender. We rewrote all six to gender-invariant constructions by using nominal sentences, impersonal plurals, and reframings that move the grammatical subject to a gender-invariant noun.
+
+Measurement: The model returns a three-class softmax over {Negative, Neutral, Positive}. We read class-to-index mapping from model.config.id2label rather than hardcoding. The primary per-template score is bipolar valence, S = P_pos - P_neg, averaged over the 30 templates to give one S_L(c) per country c and language L. We use bipolar valence rather than P_neg alone because cross-lingual shifts can move probability mass between any two classes.
+
+The Cross-Lingual Sentiment Gap is defined as
+
+    Gap(c) = S_EN(c) - (1/3) * ( S_ZH(c) + S_RU(c) + S_AR(c) )
+
+where a negative Gap represents assigning more negative sentiment in English than in the non-English aggregate. Aggregating across ZH, RU, and AR rather than tying the reference to each country's official language keeps every country on a comparable scale and preserves the balanced design. The trade-off is that the aggregate does not correspond to any single country's actual spoken language, which we consider a limitation.
+
+Statistical design: The primary test is a one-way ANOVA on the 30 per-country Gap values across the three categories, combined with a directional contrast with weights [+2, -1, -1] applied to [Adversary, Ally, Neutral] means. We regard the hypothesis as supported only if the ANOVA meets an alpha level of .05, and the contrast also satisfies an alpha level of .05 one-tailed in the predicted direction. We utilize Type II sums of squares for our analysis. Assumption checks are conducted using Levene's test for homogeneity of variances and the Shapiro-Wilk test for normality of the residuals. Given that S is bounded within the interval [-1, 1], we also report results from a Kruskal-Wallis rank-based sensitivity analysis, as well as a rerun of both the ANOVA and the contrast focusing solely on P_neg. Effect sizes are calculated as eta^2 for the ANOVA and Cohen's d for the contrast, employing the pooled standard deviation derived from the residual mean square error (MSE). The ANOVA and contrasts are performed using the statsmodels library (Seabold and Perktold, 2010), while the Kruskal-Wallis test employs scipy (Virtanen et al., 2020). Post-hoc pairwise comparisons use Holm-Bonferroni. A supplementary two-way ANOVA (language x category) on raw scores is reported as confirmation. All code is in main.ipynb.
+
+Nonsense-country baseline: We ran the same 30 templates x 4 languages with the {country} slot replaced by five fictitious country names (Zorbia, Kelandor, Traviska, Nuberia, Sambalos) chosen to span the token-length distribution of real country names. The baseline gives a reference range for the Gap in the absence of a country-identity signal. We use it descriptively rather than inferentially, because n = 5 does not support a formal test.
+
+
+4. RESULTS
+
+[Table 1: Category means of bipolar sentiment S = P_pos - P_neg by language, and Cross-Lingual Sentiment Gap per category.
+  Category    EN       ZH       RU       AR       Gap
+  Adversary  -0.074   -0.034   -0.009   -0.031   -0.049
+  Ally       -0.009   -0.013   -0.011   +0.008   -0.003
+  Neutral    -0.002   -0.009   -0.012   +0.008   +0.002 ]
+
+[Figure 1: Mean bipolar sentiment S = P_pos - P_neg assigned by XLM-RoBERTa-Twitter to each country across four languages. Rows are grouped by category (adversary, ally, neutral, with a nonsense-country reference band).]
+
+[Figure 2: Interaction plot of mean S by language and category, with +/- 1 SE across the 10 countries per cell. Non-parallel lines indicate an interaction effect.]
+
+Table 1 presents the category means. Adversaries have an average score of -0.049 on Gap, allies score -0.003, and neutrals score +0.002, indicating that the English-minus-non-English disparity is primarily concentrated on adversaries. The one-way ANOVA conducted on the 30 per-country Gap values across the three categories yielded a significant result, F(2, 27) = 8.75, p = .001, with an effect size of eta^2 = .39. Furthermore, Levene's test for equal variances was not significant (p = .538), while the Shapiro-Wilk test on the residuals was marginally non-significant (p = .071), suggesting that the assumptions of ordinary least squares (OLS) regression are acceptable.
+
+The directional contrast with weights [+2, -1, -1] confirms the predicted pattern. Adversary Gap is more negative than the ally-plus-neutral mean, t(27) = -4.16, one-tailed p = .0001. The standardized mean difference between adversary (n=10) and pooled non-adversary (n=20) Gaps is Cohen's d = -1.61, large by conventional thresholds. Holm-adjusted pairwise comparisons show that adversary vs ally, t(18), p = .011, and adversary vs neutral, t(18), p = .008, are significant, while ally vs neutral is null (p = .625). The hypothesis is supported for the adversary-versus-rest contrast, but the ally/neutral distinction is not detectable at this sample size.
+
+The Kruskal-Wallis rank-based test yielded H = 11.07, p = .004, which aligns with the findings from the parametric analysis. In addition, the sensitivity analysis focusing exclusively on P_neg resulted in F(2, 27) = 7.94, p = .002 for the ANOVA, and t(27) = 3.95 with a one-tailed p = .0003 for the contrast. These results indicate that the conclusions do not depend on the choice of bipolar valence over P_neg. Furthermore, a supplementary two-way ANOVA conducted on raw scores revealed a language by category interaction, with a partial eta^2 of .148. This finding is consistent with Figure 2: adversary lines appear lower in English compared to the other three languages, while ally and neutral lines remain relatively parallel.
+
+The five nonsense countries produce Gaps in [-0.068, -0.015] with a mean of -0.042, so the English-minus-non-English difference is modestly negative even when the country slot carries no identity. Adversary (-0.049) sits at this baseline while ally (-0.003) and neutral (+0.002) sit well above it. Adversary and nonsense Gaps fall within the same range, while familiar allies and neutral names result in smaller Gaps. The baseline alone does not indicate which language side shows the asymmetry. A closer examination of the nonsense countries in Figure 1 reveals that the negative Gap is influenced in part by non-English scores on unfamiliar tokens, rather than solely by the English side.
+
+Decomposing by language, we see that the aggregate Gap for adversaries stays negative across ZH, RU, and AR rather than riding on a single language. The effect is therefore a property of the English side being more negative, not of any one non-English language being more positive.
+
+
+5. DISCUSSION
+
+Taken together, the findings support the hypothesis of a Cross-Lingual Sentiment Gap. The primary ANOVA and planned contrast both surpass alpha = .05 in the predicted direction with a substantial effect (d = -1.61), so the adversary Gap (M = -0.049) is separated from the ally and neutral Gaps (M ~= 0). The nonsense-country baseline has a mean Gap of -0.042 in the range [-0.068, -0.015]. Adversary Gaps overlap this range, while Ally and Neutral Gaps sit well above it. This means that familiar ally and neutral names produce smaller cross-lingual disparities than either adversary or fictitious names, consistent with XLM-RoBERTa-Twitter encoding geopolitically-aligned sentiment differences that vary with the language of the prompt. That said, the baseline is descriptive and, on its own, does not identify which language side carries the asymmetry.
+
+The root-cause question has two likely answers: the sentiment classifier head itself, or the underlying LM representations it reads from. Our design cannot fully distinguish between them. The fact that the effect is specific to adversaries and not to allies or neutrals, and that it survives a Kruskal-Wallis rank check and a P_neg-only rerun, rules out generic template valence as the driver. This is likely because English-heavy pretraining data associates adversary country names with more negative contexts than any of the three non-English corpora do, so the English representation of adversary country names enters the classifier already tilted. The classifier then amplifies that tilt. Both levels contribute, and a probing study on the frozen encoder is the natural next step.
+
+The ally-versus-neutral null also provides insight. It shows that the effect is not a continuous "how friendly is this country to the U.S." gradient but a categorical adversary-versus-rest tilt, which aligns with how the adversary label is most salient in U.S. political discourse.
+
+
+6. LIMITATIONS
+
+Country names in Russian and Arabic carry grammatical case and gender that do not uniformly agree with the verbs and adjectives in a fixed-string template. We revised six templates that demonstrated a grammaticality gradient correlated with the gender of country names, and the residual case-mismatch noise in other Russian templates remains an unquantified limitation. The single classifier (XLM-RoBERTa-Twitter) limits generalization, and whether other multilingual sentiment models exhibit the same behavior is an open question. The template register is formal-to-neutral, so findings may not transfer to conversational or social-media input. With 30 countries and 4 languages, statistical power is sufficient for category-level inference but not for per-country claims. The nonsense-country baseline is descriptive, not a formal control: n = 5 is too small for hypothesis testing, and fictitious names still tokenize into unfamiliar subwords, so the probe imperfectly isolates the country-identity signal.
+
+The language-country mapping is an oversimplification. Arabic is spoken in allied (Jordan), neutral, and adversary states, Chinese is spoken outside the PRC, and Russian is spoken well beyond Russia. The non-English aggregate is therefore a proxy rather than a direct mapping from language to a country's actual discourse environment. The adversary/ally division is U.S.-centric; a different geopolitical lens would relabel countries and likely produce a different Gap pattern. The translation protocol is also asymmetric. Chinese and Arabic had fluent-speaker review from team members, whereas Russian relied on MT consensus and back-translation, and no formal inter-rater reliability was computed.
+
+
+7. CONCLUSION
+
+For U.S.-designated adversary countries, the English-language output of XLM-RoBERTa-Twitter is more negative than its Chinese, Russian, and Arabic outputs, and the effect is large enough to survive rank-based and measure-based sensitivity checks. A nonsense-country baseline shows adversary Gaps overlap the range produced by country-identity-free names. In contrast, ally and neutral Gaps sit above it, so the disparity represents a specific adversary-versus-familiar signal rather than a continuous friend-foe gradient. Ally and neutral categories are indistinguishable from each other. Probing the frozen encoder to localize where this signal enters the pipeline is the natural follow-up, alongside replication on real tweets and comparison with other multilingual sentiment classifiers.
+
+
+STATEMENT OF CONTRIBUTIONS
+
+All three authors contributed to research, design, and writing. We individually drafted candidate templates and country categorizations before agreeing on the final design, then collaborated on the inference pipeline, statistical analysis, visualizations, and the write-up. Nabil reviewed Arabic and Sebastien reviewed Chinese for fidelity, sentiment neutrality, and morphological agreement. Russian was validated jointly per the procedure in Method.
+
+
